@@ -95,6 +95,7 @@
     <Compile Include="Business\CsvWriter.cs" />
     <Compile Include="Business\Database.cs" />
     <Compile Include="Business\Model\CandidatoGrupo.cs" />
+    <Compile Include="Business\Model\ConfiguracaoPublicacao.cs" />
     <Compile Include="Business\Model\GrupoSorteio.cs" />
     <Compile Include="Business\Model\Lista.cs" />
     <Compile Include="Business\Model\Publicacao\CandidatoPub.cs" />

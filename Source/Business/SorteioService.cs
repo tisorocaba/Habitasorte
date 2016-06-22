@@ -51,7 +51,26 @@ namespace Habitasorte.Business {
             database.AtualizarStatusSorteio(status);
         }
 
+        /* Configuração */
+
+        public void ExcluirBancoReiniciarAplicacao() {
+            Database.ExcluirBanco();
+            System.Windows.Application.Current.Shutdown();
+        }
+
         /* Ações */
+
+        public void CarregarConfiguracaoPublicacao() {
+            Execute(d => {
+                Model.ConfiguracaoPublicacao = d.CarregarConfiguracaoPublicacao();
+            });
+        }
+
+        public void AtualizarConfiguracaoPublicacao() {
+            Execute(d => {
+                d.AtualizarConfiguracaoPublicacao(Model.ConfiguracaoPublicacao);
+            });
+        }
 
         public void CarregarSorteio() {
             Execute(d => {
@@ -136,6 +155,9 @@ namespace Habitasorte.Business {
             });
         }
 
+        public string DiretorioExportacaoCSV => Database.DiretorioExportacaoCSV;
+        public bool DiretorioExportacaoCSVExistente => Directory.Exists(Database.DiretorioExportacaoCSV);
+
         public void ExportarListas(Action<string> updateStatus) {
             Execute(d => {
                 d.ExportarListas(updateStatus);
@@ -144,8 +166,8 @@ namespace Habitasorte.Business {
 
         public string PublicarLista(int? idLista, bool teste = false) {
 
-            string url = ConfigurationManager.AppSettings["PUBLICACAO_URL"];
-            string codigo = ConfigurationManager.AppSettings["PUBLICACAO_CODIGO"];
+            string url = Model.ConfiguracaoPublicacao.UrlPublicacao;
+            string codigo = Model.ConfiguracaoPublicacao.CodigoPublicacao;
 
             SorteioPub sorteioPublicacao = new SorteioPub {
                 Codigo = int.Parse(codigo),
@@ -176,8 +198,8 @@ namespace Habitasorte.Business {
 
         private HttpContent HttpPost(string url, HttpContent requestContent, bool jsonContent = false) {
 
-            string usuario = ConfigurationManager.AppSettings["PUBLICACAO_USUARIO"];
-            string senha = ConfigurationManager.AppSettings["PUBLICACAO_SENHA"];
+            string usuario = Model.ConfiguracaoPublicacao.UsuarioPublicacao;
+            string senha = Model.ConfiguracaoPublicacao.SenhaPublicacao;
 
             using (HttpClient client = new HttpClient()) {
 

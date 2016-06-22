@@ -26,6 +26,32 @@
                 <DropShadowEffect BlurRadius="5" ShadowDepth="3" Opacity="0.5"/>
             </TabControl.Effect>
 
+            <!-- ETAPA DE CONFIGURAÇÃO -->
+            <TabItem x:Name="tabConfiguracao" Header="Configuração">
+                <Grid x:Name="grdConfiguracao">
+                    <Grid Margin="10,10,10,0" VerticalAlignment="Top" Height="150">
+                        <Border BorderBrush="LightGray" BorderThickness="0.6" Margin="0,0,0,105" Background="LightGoldenrodYellow" CornerRadius="10"/>
+                        <Button x:Name="btnExcluirDados" Content="Excluir Dados e Fechar Aplicação." Height="24" Margin="10,10,10,0" VerticalAlignment="Top" Click="btnExcluirDados_Click"/>
+                    </Grid>
+                    <Label Content="Dados de Publicação" Margin="10,66,10,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="15"/>
+                    <Grid Margin="10,101,10,34">
+                        <Border BorderBrush="LightGray" BorderThickness="0.6" />
+                        <Label Content="URL" Margin="10,10,10,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
+                        <TextBox x:Name="txtUrlPublicacao" Text="{Binding ConfiguracaoPublicacao.UrlPublicacao}" Height="23" Margin="10,36,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
+                        <Label Content="Código" Margin="10,64,10,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
+                        <TextBox x:Name="txtCodigoPublicacao" Text="{Binding ConfiguracaoPublicacao.CodigoPublicacao}" Height="23" Margin="10,90,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
+                        <Label Content="Usuário" Margin="10,118,10,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
+                        <TextBox x:Name="txtUsuarioPublicacao" Text="{Binding ConfiguracaoPublicacao.UsuarioPublicacao}" Height="23" Margin="10,144,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
+                        <Label Content="Senha" Margin="10,172,10,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
+                        <TextBox x:Name="txtSenhaPublicacao" Text="{Binding ConfiguracaoPublicacao.SenhaPublicacao}" Height="23" Margin="10,198,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
+                        <Button x:Name="btnAtualizarDadosPublicacao" Content="Salvar Dados e Testar Serviço de Publicação." Height="24" Margin="10,236,10,0" VerticalAlignment="Top" Click="btnAtualizarDadosPublicacao_Click"/>
+                    </Grid>
+                    <Grid Margin="10,0,10,5" VerticalAlignment="Bottom" Height="24" Grid.ColumnSpan="3">
+                        <Button x:Name="btnAvancarConfiguracao" Content="Avançar &gt;&gt;" Margin="0,0,0,0" HorizontalAlignment="Right" Width="100" Click="btnAvancarConfiguracao_Click"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
             <!-- ETAPA DE CADASTRO-->
             <TabItem x:Name="tabCadastro" Header="1. Cadastro do Sorteio">
                 <Grid x:Name="grdCadastro">
@@ -42,8 +68,8 @@
                         <TextBox x:Name="txtEmpreendimento4" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento4, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento4Ativo}" Margin="10,252,10,0" VerticalAlignment="Top" MaxLength="50" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
                         <Button x:Name="btnAtualizarCadastro" Content="Atualizar Dados" Height="24" Margin="10,290,10,0" VerticalAlignment="Top" Click="buttonAtualizarCadastro_Click"/>
                     </Grid>
-                    <Button x:Name="btnTestarPublicacao" Content="Testar Serviço de Publicação" Height="24" Margin="10,319,10,0" VerticalAlignment="Top" Click="btnTestarPublicacao_Click"/>
                     <Grid Margin="10,0,10,5" VerticalAlignment="Bottom" Height="24" Grid.ColumnSpan="3">
+                        <Button x:Name="btnRecuarCadastro" Content="&lt;&lt; Configuração" Margin="0,0,0,0" HorizontalAlignment="Left" Width="100" Click="btnRecuarCadastro_Click"/>
                         <Button x:Name="btnAvancarCadastro" Content="Avançar &gt;&gt;" Margin="0,0,0,0" HorizontalAlignment="Right" Width="100" Click="buttonAvancarCadastro_Click"/>
                     </Grid>
                 </Grid>
@@ -328,6 +354,7 @@
                     </Grid>
                     <Button x:Name="btnExportarListas" Content="Exportar Listas!" VerticalAlignment="Top" Height="50" Margin="10,150,10,0" Click="Button_Click"/>
                     <Label x:Name="lblStatusExportacao" Content="-" VerticalAlignment="Top" Height="41" Margin="10,205,10,0" Padding="0" FontWeight="Bold" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                    <Button x:Name="btnAbrirDiretorioExportacao" Content="Abrir Diretório de Exportação." VerticalAlignment="Top" Height="24" Margin="10,251,10,0" Click="btnAbrirDiretorioExportacao_Click"/>
                     <Grid Margin="10,0,10,5" VerticalAlignment="Bottom" Height="24">
                         <Button x:Name="btnRecuarFinalizado" Content="&lt;&lt; Recuar" Margin="0,0,0,0" HorizontalAlignment="Left" Width="100" Click="buttonRecuarFinalizado_Click"/>
                     </Grid>

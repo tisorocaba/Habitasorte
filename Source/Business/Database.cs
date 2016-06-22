@@ -53,6 +53,15 @@ namespace Habitasorte.Business {
             }
         }
 
+        public static void ExcluirBanco() {
+            string dbFile = ConfigurationManager.AppSettings["ARQUIVO_BANCO"];
+            string dbDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string dbPath = $"{dbDirectory}{dbFile}";
+            if (File.Exists(dbPath)) {
+                File.Delete(dbPath);
+            }
+        }
+
         public static SqlCeConnection CreateConnection() {
             SqlCeConnection connection = new SqlCeConnection(ConnectionString);
             connection.Open();
@@ -103,6 +112,22 @@ namespace Habitasorte.Business {
         }
 
         /* Ações */
+
+        public ConfiguracaoPublicacao CarregarConfiguracaoPublicacao() {
+            return new ConfiguracaoPublicacao {
+                UrlPublicacao = CarregarParametro("PUBLICACAO_URL"),
+                CodigoPublicacao = CarregarParametro("PUBLICACAO_CODIGO"),
+                UsuarioPublicacao = CarregarParametro("PUBLICACAO_USUARIO"),
+                SenhaPublicacao = CarregarParametro("PUBLICACAO_SENHA")
+            };
+        }
+
+        public void AtualizarConfiguracaoPublicacao(ConfiguracaoPublicacao configuracao) {
+            AtualizarParametro("PUBLICACAO_URL", configuracao.UrlPublicacao);
+            AtualizarParametro("PUBLICACAO_CODIGO", configuracao.CodigoPublicacao);
+            AtualizarParametro("PUBLICACAO_USUARIO", configuracao.UsuarioPublicacao);
+            AtualizarParametro("PUBLICACAO_SENHA", configuracao.SenhaPublicacao);
+        }
 
         public Sorteio CarregarSorteio() {
 
@@ -536,18 +561,20 @@ namespace Habitasorte.Business {
             }
         }
 
+        public static string DiretorioExportacaoCSV => $"{AppDomain.CurrentDomain.BaseDirectory}CSV";
+
         public void ExportarListas(Action<string> updateStatus) {
 
             updateStatus("Iniciando exportação...");
 
-            string directoryPath = $"{AppDomain.CurrentDomain.BaseDirectory}CSV";
+            string directoryPath = DiretorioExportacaoCSV;
             if (Directory.Exists(directoryPath)) {
                 updateStatus("Excluindo arquivos anteriores.");
                 Directory.Delete(directoryPath, true);
             }
             Directory.CreateDirectory(directoryPath);
 
-            string[] tabelas = new string[] { "PARAMETRO", "CANDIDATO", "LISTA", "CANDIDATO_LISTA" };
+            string[] tabelas = new string[] { "CANDIDATO", "LISTA", "CANDIDATO_LISTA" };
             foreach (string tabela in tabelas) {
                 WriteTable(directoryPath, tabela, updateStatus);
             }

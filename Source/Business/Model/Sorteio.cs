@@ -20,6 +20,7 @@ namespace Habitasorte.Business.Model {
         private string empreendimento4;
         private ICollection<Lista> listas;
         private Lista proximaLista;
+        private ConfiguracaoPublicacao configuracaoPublicacao;
 
         public Sorteio() {
             listas = new List<Lista>();
@@ -111,6 +112,11 @@ namespace Habitasorte.Business.Model {
         public int? TotalVagasTitulares => listas.Where(l => !l.Nome.EndsWith("(Reserva)")).Sum(l => l.Quantidade);
         public int? TotalVagasReserva => listas.Where(l => l.Nome.EndsWith("(Reserva)")).Sum(l => l.Quantidade);
         public int? TotalVagas => listas.Sum(l => l.Quantidade);
+
+        public ConfiguracaoPublicacao ConfiguracaoPublicacao {
+            get { return configuracaoPublicacao; }
+            set { SetField(ref configuracaoPublicacao, value); }
+        }
 
         /* INotifyPropertyChanged */
 

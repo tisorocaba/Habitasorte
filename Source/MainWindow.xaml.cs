@@ -43,6 +43,7 @@ namespace Habitasorte {
             Service.SorteioChanged += (s) => { DataContext = s; };
             Service.CarregarSorteio();
 
+            EtapaConfiguracao(false);
             EtapaCadastro(false);
             EtapaImportacao(false);
             EtapaQuantidades(false);
@@ -112,6 +113,11 @@ namespace Habitasorte {
 
         /* Ativação das etapas do sorteio. */
 
+        private void EtapaConfiguracao(bool ativo) {
+            Service.CarregarConfiguracaoPublicacao();
+            AlternarTab(tabConfiguracao, ativo);
+        }
+
         private void EtapaCadastro(bool ativo) {
             Service.CarregarSorteio();
             btnAvancarCadastro.IsEnabled = !VerificarStatus(Status.CADASTRO);
@@ -160,10 +166,21 @@ namespace Habitasorte {
         private void EtapaFinalizado(bool ativo) {
             btnRecuarFinalizado.IsEnabled = true;
             btnExportarListas.IsEnabled = true;
+            btnAbrirDiretorioExportacao.IsEnabled = ativo && Service.DiretorioExportacaoCSVExistente;
             AlternarTab(tabFinalizado, ativo);
         }
 
         /* Transição entre as etapas .*/
+
+        private void btnAvancarConfiguracao_Click(object sender, RoutedEventArgs e) {
+            EtapaConfiguracao(false);
+            EtapaCadastro(true);
+        }
+
+        private void btnRecuarCadastro_Click(object sender, RoutedEventArgs e) {
+            EtapaCadastro(false);
+            EtapaConfiguracao(true);
+        }
 
         private void buttonAvancarCadastro_Click(object sender, RoutedEventArgs e) {
             EtapaCadastro(false);
@@ -203,6 +220,43 @@ namespace Habitasorte {
         private void buttonRecuarFinalizado_Click(object sender, RoutedEventArgs e) {
             EtapaFinalizado(false);
             EtapaSorteio(true);
+        }
+
+        /* Etapa de Configuração */
+
+        private void btnExcluirDados_Click(object sender, RoutedEventArgs e) {
+
+            MessageBoxResult result = MessageBox.Show(
+                $"Excluir dados e reiniciar aplicação?",
+                "Excluir dados?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question
+            );
+
+            if (result == MessageBoxResult.Yes) {
+
+                MessageBoxResult confirmResult = MessageBox.Show(
+                    $"Tem certeza? A exclusão dos dados é definitiva!",
+                    "Excluir dados?",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question
+                );
+
+                if (confirmResult == MessageBoxResult.Yes) {
+                    Service.ExcluirBancoReiniciarAplicacao();
+                }
+            }
+        }
+
+        private void btnAtualizarDadosPublicacao_Click(object sender, RoutedEventArgs e) {
+            Service.AtualizarConfiguracaoPublicacao();
+            EtapaConfiguracao(true);
+            try {
+                string message = Service.PublicarLista(null, true);
+                ShowMessage($"Sucesso no teste de publicação:\n\n {message}");
+            } catch (Exception exception) {
+                ShowErrorMessage($"Falha no teste de publicação:\n\n {exception.Message}");
+            }
         }
 
         /* Etapa de Cadastro. */
@@ -436,15 +490,6 @@ namespace Habitasorte {
 
         /* Publicação */
 
-        private void btnTestarPublicacao_Click(object sender, RoutedEventArgs e) {
-            try {
-                string message = Service.PublicarLista(null, true);
-                ShowMessage($"Sucesso no teste de publicação:\n\n {message}");
-            } catch (Exception exception) {
-                ShowErrorMessage($"Falha no teste de publicação:\n\n {exception.Message}");
-            }
-        }
-
         private void btnPublicarTodasListas_Click(object sender, RoutedEventArgs e) {
 
             MessageBoxResult result = MessageBox.Show(
@@ -497,6 +542,14 @@ namespace Habitasorte {
                 processing = false;
             };
             worker.RunWorkerAsync();
+        }
+
+        private void btnAbrirDiretorioExportacao_Click(object sender, RoutedEventArgs e) {
+            Process.Start(new ProcessStartInfo() {
+                FileName = Service.DiretorioExportacaoCSV,
+                UseShellExecute = true,
+                Verb = "open"
+            });
         }
     }
 }
