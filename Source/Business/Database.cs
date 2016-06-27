@@ -621,7 +621,7 @@ namespace Habitasorte.Business {
 
             string queryCandidatos = @"
                 SELECT
-                    CANDIDATO_LISTA.SEQUENCIA_CONTEMPLACAO, CANDIDATO.CPF, CANDIDATO.NOME
+                    CANDIDATO_LISTA.SEQUENCIA_CONTEMPLACAO, CANDIDATO.CPF, CANDIDATO.NOME, QUANTIDADE_CRITERIOS
                 FROM
                     CANDIDATO_LISTA
                     INNER JOIN LISTA ON CANDIDATO_LISTA.ID_LISTA = LISTA.ID_LISTA
@@ -637,7 +637,8 @@ namespace Habitasorte.Business {
                         lista.Candidatos.Add(new CandidatoPub {
                             IdCandidato = resultSet.GetInt32(resultSet.GetOrdinal("SEQUENCIA_CONTEMPLACAO")),
                             Cpf = resultSet.GetDecimal(resultSet.GetOrdinal("CPF")),
-                            Nome = resultSet.GetString(resultSet.GetOrdinal("NOME"))
+                            Nome = resultSet.GetString(resultSet.GetOrdinal("NOME")),
+                            QuantidadeCriterios = resultSet.GetInt32(resultSet.GetOrdinal("QUANTIDADE_CRITERIOS"))
                         });
                     }
                 }

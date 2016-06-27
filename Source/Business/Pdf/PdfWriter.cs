@@ -28,13 +28,14 @@ namespace Habitasorte.Business.Pdf {
                     p.Font = headerFont;
                     p.Add("PREFEITURA DE SOROCABA \n");
                     p.Add(string.Format("{0}\n", sorteio.Nome.ToUpper()));
-                    p.Add(string.Format("{0:00} - {1}\n\n", lista.IdLista, lista.Nome.ToUpper()));
+                    p.Add(string.Format("{0:00} - {1}\n", lista.IdLista, lista.Nome.ToUpper()));
+                    p.Add(string.Format("Semente de Sorteio: {0} ({1})\n\n", lista.SementeSorteio, lista.FonteSementeSorteio));
                     document.Add(p);
 
-                    PdfPTable table = new PdfPTable(3);
+                    PdfPTable table = new PdfPTable(4);
                     table.WidthPercentage = 100f;
                     table.DefaultCell.HorizontalAlignment = 1;
-                    table.SetWidths(new float[] { 1f, 2f, 8f });
+                    table.SetWidths(new float[] { 1f, 2f, 8f, 1f});
                     table.HeaderRows = 1;
 
                     table.AddCell(new PdfPCell(new Phrase("Nº", headerFont)) {
@@ -52,10 +53,16 @@ namespace Habitasorte.Business.Pdf {
                         BackgroundColor = BaseColor.LIGHT_GRAY
                     });
 
+                    table.AddCell(new PdfPCell(new Phrase("CRIT.", headerFont)) {
+                        HorizontalAlignment = 1,
+                        BackgroundColor = BaseColor.LIGHT_GRAY
+                    });
+
                     foreach (CandidatoPub candidato in lista.Candidatos) {
                         table.AddCell(string.Format("{0:000}", candidato.IdCandidato));
                         table.AddCell(string.Format("{0:000'.'000'.'000-00}", candidato.Cpf));
                         table.AddCell(candidato.Nome.ToUpper());
+                        table.AddCell(candidato.QuantidadeCriterios.ToString());
                     }
 
                     document.Add(table);
