@@ -1,5 +1,6 @@
 ﻿using Habitasorte.Business;
 using Habitasorte.Business.Model;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -114,8 +115,9 @@ namespace Habitasorte {
         /* Ativação das etapas do sorteio. */
 
         private void EtapaConfiguracao(bool ativo) {
-            Service.CarregarConfiguracaoPublicacao();
             AlternarTab(tabConfiguracao, ativo);
+            txtCodigoPublicacao.Password = Sorteio.ConfiguracaoPublicacao.CodigoPublicacao;
+            txtSenhaPublicacao.Password = Sorteio.ConfiguracaoPublicacao.SenhaPublicacao;
         }
 
         private void EtapaCadastro(bool ativo) {
@@ -156,7 +158,7 @@ namespace Habitasorte {
             btnAvancarSorteio.IsEnabled = VerificarStatus(Status.FINALIZADO);
             grdIniciarSorteio.IsEnabled = VerificarStatus(Status.SORTEIO, Status.SORTEIO_INICIADO);
             grdSorteioEmAndamento.IsEnabled = false;
-            btnPublicarTodasListas.IsEnabled = true;
+            btnPublicarTodasListas.IsEnabled = Sorteio.Listas.Any(s => s.Sorteada);
             lstSorteioListasSorteio.IsEnabled = true;
             lblSorteioListaAtual.Visibility = Visibility.Hidden;
             lblSorteioProximaLista.Visibility = Visibility.Visible;
@@ -249,6 +251,8 @@ namespace Habitasorte {
         }
 
         private void btnAtualizarDadosPublicacao_Click(object sender, RoutedEventArgs e) {
+            Sorteio.ConfiguracaoPublicacao.CodigoPublicacao = txtCodigoPublicacao.Password;
+            Sorteio.ConfiguracaoPublicacao.SenhaPublicacao = txtSenhaPublicacao.Password;
             Service.AtualizarConfiguracaoPublicacao();
             EtapaConfiguracao(true);
             try {
@@ -444,7 +448,7 @@ namespace Habitasorte {
             worker.RunWorkerAsync();
         }
 
-        private void ButtonPublicarLista_Click(object sender, RoutedEventArgs e) {
+        private void btnPublicarLista_Click(object sender, RoutedEventArgs e) {
 
             Lista lista = ((sender as Button).Parent as Grid).DataContext as Lista;
 
@@ -457,6 +461,20 @@ namespace Habitasorte {
 
             if (result == MessageBoxResult.Yes) {
                 PublicarListas(lista);
+            }
+        }
+
+        private void btnSalvarLista_Click(object sender, RoutedEventArgs e) {
+
+            Lista lista = ((sender as Button).Parent as Grid).DataContext as Lista;
+
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.FileName = lista.Nome;
+            saveDialog.DefaultExt = ".pdf";
+            saveDialog.Filter = "PDF files (.pdf)|*.pdf";
+
+            if (saveDialog.ShowDialog() == true) {
+                Service.SalvarLista(lista, saveDialog.FileName);
             }
         }
 

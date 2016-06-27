@@ -39,11 +39,11 @@
                         <Label Content="URL" Margin="10,10,10,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
                         <TextBox x:Name="txtUrlPublicacao" Text="{Binding ConfiguracaoPublicacao.UrlPublicacao}" Height="23" Margin="10,36,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
                         <Label Content="Código" Margin="10,64,10,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
-                        <TextBox x:Name="txtCodigoPublicacao" Text="{Binding ConfiguracaoPublicacao.CodigoPublicacao}" Height="23" Margin="10,90,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
+                        <PasswordBox x:Name="txtCodigoPublicacao" Height="23" Margin="10,90,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
                         <Label Content="Usuário" Margin="10,118,10,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
                         <TextBox x:Name="txtUsuarioPublicacao" Text="{Binding ConfiguracaoPublicacao.UsuarioPublicacao}" Height="23" Margin="10,144,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
                         <Label Content="Senha" Margin="10,172,10,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
-                        <TextBox x:Name="txtSenhaPublicacao" Text="{Binding ConfiguracaoPublicacao.SenhaPublicacao}" Height="23" Margin="10,198,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
+                        <PasswordBox x:Name="txtSenhaPublicacao" Height="23" Margin="10,198,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" />
                         <Button x:Name="btnAtualizarDadosPublicacao" Content="Salvar Dados e Testar Serviço de Publicação." Height="24" Margin="10,236,10,0" VerticalAlignment="Top" Click="btnAtualizarDadosPublicacao_Click"/>
                     </Grid>
                     <Grid Margin="10,0,10,5" VerticalAlignment="Bottom" Height="24" Grid.ColumnSpan="3">
@@ -59,13 +59,13 @@
                         <Label Content="Nome do Sorteio" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
                         <TextBox x:Name="txtNomeSorteio" Height="23" TextWrapping="Wrap" Text="{Binding Nome, ValidatesOnDataErrors=True}" Margin="10,36,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
                         <Label Content="Empreendimento 1" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
-                        <TextBox x:Name="txtEmpreendimento1" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento1, ValidatesOnDataErrors=True}" Margin="10,90,10,0" VerticalAlignment="Top" MaxLength="50" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
+                        <TextBox x:Name="txtEmpreendimento1" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento1, ValidatesOnDataErrors=True}" Margin="10,90,10,0" VerticalAlignment="Top" MaxLength="26" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
                         <CheckBox x:Name="chkBoxEmpreendimento2" Content="Empreendimento 2" IsChecked="{Binding Empreendimento2Ativo}" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="txtEmpreendimento2" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento2, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento2Ativo}" Margin="10,144,10,0" VerticalAlignment="Top" MaxLength="50" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
+                        <TextBox x:Name="txtEmpreendimento2" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento2, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento2Ativo}" Margin="10,144,10,0" VerticalAlignment="Top" MaxLength="26" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
                         <CheckBox x:Name="chkBoxEmpreendimento3" Content="Empreendimento 3" IsEnabled="{Binding Empreendimento2Ativo}" IsChecked="{Binding Empreendimento3Ativo}" HorizontalAlignment="Left" Margin="10,178,0,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="txtEmpreendimento3" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento3, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento3Ativo}" Margin="10,198,10,0" VerticalAlignment="Top" MaxLength="50" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
+                        <TextBox x:Name="txtEmpreendimento3" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento3, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento3Ativo}" Margin="10,198,10,0" VerticalAlignment="Top" MaxLength="26" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
                         <CheckBox x:Name="chkBoxEmpreendimento4" Content="Empreendimento 4" IsEnabled="{Binding Empreendimento3Ativo}" IsChecked="{Binding Empreendimento4Ativo}" HorizontalAlignment="Left" Margin="10,232,0,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="txtEmpreendimento4" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento4, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento4Ativo}" Margin="10,252,10,0" VerticalAlignment="Top" MaxLength="50" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
+                        <TextBox x:Name="txtEmpreendimento4" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento4, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento4Ativo}" Margin="10,252,10,0" VerticalAlignment="Top" MaxLength="26" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
                         <Button x:Name="btnAtualizarCadastro" Content="Atualizar Dados" Height="24" Margin="10,290,10,0" VerticalAlignment="Top" Click="buttonAtualizarCadastro_Click"/>
                     </Grid>
                     <Grid Margin="10,0,10,5" VerticalAlignment="Bottom" Height="24" Grid.ColumnSpan="3">
@@ -248,7 +248,8 @@
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="20"/>
                                                 <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="40"/>
+                                                <ColumnDefinition Width="35"/>
+                                                <ColumnDefinition Width="35"/>
                                             </Grid.ColumnDefinitions>
                                             <Image Grid.Column="0" Source="Resources/certo.png" Width="20" Height="20">
                                                 <Image.Style>
@@ -263,7 +264,19 @@
                                                 </Image.Style>
                                             </Image>
                                             <Label Grid.Column="1" Content="{Binding NomeFormatado}" HorizontalContentAlignment="Left"/>
-                                            <Button Grid.Column="3" Content="PUB." Click="ButtonPublicarLista_Click" >
+                                            <Button Grid.Column="2" Content="PUB." Click="btnPublicarLista_Click">
+                                                <Button.Style>
+                                                    <Style TargetType="{x:Type Button}">
+                                                        <Setter Property="Visibility" Value="Hidden" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Sorteada}" Value="true">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+                                            <Button Grid.Column="3" Content="SAL." Click="btnSalvarLista_Click">
                                                 <Button.Style>
                                                     <Style TargetType="{x:Type Button}">
                                                         <Setter Property="Visibility" Value="Hidden" />

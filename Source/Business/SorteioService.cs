@@ -1,10 +1,10 @@
 ﻿using Excel;
 using Habitasorte.Business.Model;
 using Habitasorte.Business.Model.Publicacao;
+using Habitasorte.Business.Pdf;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
@@ -60,12 +60,6 @@ namespace Habitasorte.Business {
 
         /* Ações */
 
-        public void CarregarConfiguracaoPublicacao() {
-            Execute(d => {
-                Model.ConfiguracaoPublicacao = d.CarregarConfiguracaoPublicacao();
-            });
-        }
-
         public void AtualizarConfiguracaoPublicacao() {
             Execute(d => {
                 d.AtualizarConfiguracaoPublicacao(Model.ConfiguracaoPublicacao);
@@ -75,6 +69,7 @@ namespace Habitasorte.Business {
         public void CarregarSorteio() {
             Execute(d => {
                 Model = d.CarregarSorteio();
+                Model.ConfiguracaoPublicacao = d.CarregarConfiguracaoPublicacao();
             });
         }
 
@@ -194,6 +189,13 @@ namespace Habitasorte.Business {
             }
 
             return responseContent.ReadAsStringAsync().Result;
+        }
+
+        public void SalvarLista(Lista lista, string caminhoArquivo) {
+            ListaPub listaPublicacao = null;
+            Execute(d => { listaPublicacao = d.CarregarListaPublicacao(lista.IdLista); });
+            PdfFileWriter.WriteToPdf(caminhoArquivo, Model, listaPublicacao);
+            System.Diagnostics.Process.Start(caminhoArquivo);
         }
 
         private HttpContent HttpPost(string url, HttpContent requestContent, bool jsonContent = false) {
