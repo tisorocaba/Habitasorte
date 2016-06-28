@@ -594,7 +594,18 @@ namespace Habitasorte.Business {
                         CsvWriter.WriteRow(writter, fieldRange.Select(i => dataReader.GetName(i).ToLower()).ToArray());
                         while (dataReader.Read()) {
                             updateStatus($"Exportando tabela \"{tableName}\" - linha {++count} de {total}.");
-                            CsvWriter.WriteRow(writter, fieldRange.Select(i => dataReader.GetValue(i).ToString()).ToArray());
+                            CsvWriter.WriteRow(
+                                writter,
+                                fieldRange.Select(i => dataReader.GetValue(i))
+                                    .Select(i => {
+                                        if (i is bool) {
+                                            return ((bool) i) ? "1" : "0";
+                                        } else {
+                                            return i.ToString();
+                                        }
+                                    })
+                                    .ToArray()
+                            );
                         }
                     }
                 };
