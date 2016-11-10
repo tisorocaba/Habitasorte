@@ -97,6 +97,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Business\CsvWriter.cs" />
+    <Compile Include="Business\Model\Empreendimento.cs" />
     <Compile Include="Business\Pdf\CustomPdfPageEventHelper.cs" />
     <Compile Include="Business\Database.cs" />
     <Compile Include="Business\Model\CandidatoGrupo.cs" />

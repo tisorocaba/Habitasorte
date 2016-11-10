@@ -114,17 +114,10 @@ namespace Habitasorte.Business {
                 using (Stream stream = File.OpenRead(arquivoImportacao)) {
                     using (IExcelDataReader excelReader = CreateExcelReader(arquivoImportacao, stream)) {
 
-                        List<string> empreendimentos = new List<string>();
-                        empreendimentos.Add(Model.Empreendimento1);
-                        if (Model.Empreendimento2Ativo) {
-                            empreendimentos.Add(Model.Empreendimento2);
-                        }
-                        if (Model.Empreendimento3Ativo) {
-                            empreendimentos.Add(Model.Empreendimento3);
-                        }
-                        if (Model.Empreendimento4Ativo) {
-                            empreendimentos.Add(Model.Empreendimento4);
-                        }
+                        List<string> empreendimentos = Model.Empreendimentos
+                            .OrderBy(e => e.Ordem)
+                            .Select(e => e.Nome)
+                            .ToList();
 
                         d.CriarListasSorteio(empreendimentos, excelReader, updateStatus, updateProgress);
                     }

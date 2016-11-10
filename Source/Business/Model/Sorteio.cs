@@ -11,13 +11,7 @@ namespace Habitasorte.Business.Model {
 
         private string nome;
         private string statusSorteio;
-        private string empreendimento1;
-        private bool empreendimento2Ativo;
-        private string empreendimento2;
-        private bool empreendimento3Ativo;
-        private string empreendimento3;
-        private bool empreendimento4Ativo;
-        private string empreendimento4;
+        private ICollection<Empreendimento> empreendimentos;
         private ICollection<Lista> listas;
         private Lista proximaLista;
         private ConfiguracaoPublicacao configuracaoPublicacao;
@@ -36,60 +30,36 @@ namespace Habitasorte.Business.Model {
             set { SetField(ref statusSorteio, value); }
         }
 
-        public string Empreendimento1 {
-            get { return empreendimento1; }
-            set { SetField(ref empreendimento1, value); }
+        public ICollection<Empreendimento> Empreendimentos {
+            get { return empreendimentos; }
+            set { SetField(ref empreendimentos, value); }
         }
 
-        public bool Empreendimento2Ativo {
-            get { return empreendimento2Ativo; }
-            set {
-                SetField(ref empreendimento2Ativo, value);
-                if (!value) {
-                    empreendimento2 = null;
-                    Empreendimento3Ativo = false;
-                }
-                NotifyPropertyChanged("Empreendimento2");
+        public void AdicionarEmpreendimento(string nome) {
+            empreendimentos.Add(new Empreendimento {
+                Ordem = empreendimentos.Count() == 0 ? 1 : empreendimentos.Max(e => e.Ordem) + 1,
+                Nome = nome
+            });
+        }
+
+        public void RemoverEmpreendimento(Empreendimento empreendimento) {
+            empreendimentos.Remove(empreendimento);
+            int ordem = 1;
+            foreach (Empreendimento e in empreendimentos) {
+                e.Ordem = ordem;
+                ordem++;
             }
         }
 
-        public string Empreendimento2 {
-            get { return empreendimento2; }
-            set { SetField(ref empreendimento2, value); }
-        }
-
-        public bool Empreendimento3Ativo {
-            get { return empreendimento3Ativo; }
-            set {
-                SetField(ref empreendimento3Ativo, value);
-                if (!value) {
-                    empreendimento3 = null;
-                    Empreendimento4Ativo = false;
-                }
-                NotifyPropertyChanged("Empreendimento3");
+        public string ErroEmpreendimentos { get { 
+            if (empreendimentos.Count() == 0) {
+                return "Pelo menos um empreendimento deve ser informado.";
+            } else if(empreendimentos.Any(e => string.IsNullOrWhiteSpace(e.Nome))) {
+                return "O nome de todos os empreendimentos devem ser informados.";
+            } else {
+                return null;
             }
-        }
-
-        public string Empreendimento3 {
-            get { return empreendimento3; }
-            set { SetField(ref empreendimento3, value); }
-        }
-
-        public bool Empreendimento4Ativo {
-            get { return empreendimento4Ativo; }
-            set {
-                SetField(ref empreendimento4Ativo, value);
-                if (!value) {
-                    empreendimento4 = null;
-                }
-                NotifyPropertyChanged("Empreendimento4");
-            }
-        }
-
-        public string Empreendimento4 {
-            get { return empreendimento4; }
-            set { SetField(ref empreendimento4, value); }
-        }
+        }}
 
         public ICollection<Lista> Listas {
             get { return listas; }
@@ -147,20 +117,13 @@ namespace Habitasorte.Business.Model {
 
         string IDataErrorInfo.this[string columnName] { get {
             if (columnName == "Nome" && string.IsNullOrWhiteSpace(Nome)) return "Nome inválido!";
-            if (columnName == "Empreendimento1" && string.IsNullOrWhiteSpace(Empreendimento1)) return "Empreendimento 1 inválido!";
-            if (columnName == "Empreendimento2" && Empreendimento2Ativo && string.IsNullOrWhiteSpace(Empreendimento2)) return "Empreendimento 2 inválido!";
-            if (columnName == "Empreendimento3" && Empreendimento3Ativo && string.IsNullOrWhiteSpace(Empreendimento3)) return "Empreendimento 3 inválido!";
-            if (columnName == "Empreendimento4" && Empreendimento4Ativo && string.IsNullOrWhiteSpace(Empreendimento4)) return "Empreendimento 4 inválido!";
             return null;
         }}
 
         public bool IsValid { get {
             IDataErrorInfo errorInfo = this as IDataErrorInfo;
             return errorInfo["Nome"] == null
-                && errorInfo["Empreendimento1"] == null
-                && errorInfo["Empreendimento2"] == null
-                && errorInfo["Empreendimento3"] == null
-                && errorInfo["Empreendimento4"] == null;
+                && ErroEmpreendimentos == null;
         }}
 
         #endregion

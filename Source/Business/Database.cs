@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Habitasorte.Business.Model.Publicacao;
+using System.Collections.ObjectModel;
 
 namespace Habitasorte.Business {
     public class Database {
@@ -130,34 +131,46 @@ namespace Habitasorte.Business {
         }
 
         public Sorteio CarregarSorteio() {
-
-            string empreendimento2 = CarregarParametro("EMPREENDIMENTO_2");
-            string empreendimento3 = CarregarParametro("EMPREENDIMENTO_3");
-            string empreendimento4 = CarregarParametro("EMPREENDIMENTO_4");
-
             return new Sorteio {
                 Nome = CarregarParametro("NOME_SORTEIO"),
                 StatusSorteio = CarregarParametro("STATUS_SORTEIO"),
-                Empreendimento1 = CarregarParametro("EMPREENDIMENTO_1"),
-                Empreendimento2Ativo = !String.IsNullOrWhiteSpace(empreendimento2),
-                Empreendimento2 = empreendimento2,
-                Empreendimento3Ativo = !String.IsNullOrWhiteSpace(empreendimento3),
-                Empreendimento3 = empreendimento3,
-                Empreendimento4Ativo = !String.IsNullOrWhiteSpace(empreendimento4),
-                Empreendimento4 = empreendimento4
+                Empreendimentos = CarregarEmpreendimentos()
             };
         }
 
         public void AtualizarSorteio(Sorteio sorteio) {
             AtualizarParametro("NOME_SORTEIO", sorteio.Nome);
-            AtualizarParametro("EMPREENDIMENTO_1", sorteio.Empreendimento1);
-            AtualizarParametro("EMPREENDIMENTO_2", sorteio.Empreendimento2Ativo ? sorteio.Empreendimento2 : null);
-            AtualizarParametro("EMPREENDIMENTO_3", sorteio.Empreendimento3Ativo ? sorteio.Empreendimento3 : null);
-            AtualizarParametro("EMPREENDIMENTO_4", sorteio.Empreendimento4Ativo ? sorteio.Empreendimento4 : null);
+            AtualizarEmpreendimentos(sorteio.Empreendimentos);
         }
 
         public void AtualizarStatusSorteio(string status) {
             AtualizarParametro("STATUS_SORTEIO", status);
+        }
+
+        private ICollection<Empreendimento> CarregarEmpreendimentos() {
+            ObservableCollection<Empreendimento> empreendimentos = new ObservableCollection<Empreendimento>();
+            using (SqlCeCommand command = CreateCommand($"SELECT * FROM EMPREENDIMENTO ORDER BY ORDEM")) {
+                using (SqlCeResultSet resultSet = command.ExecuteResultSet(ResultSetOptions.None)) {
+                    while (resultSet.Read()) {
+                        empreendimentos.Add(new Empreendimento {
+                            Ordem = resultSet.GetInt32(resultSet.GetOrdinal("ORDEM")),
+                            Nome = resultSet.GetString(resultSet.GetOrdinal("NOME"))
+                        });
+                    }
+                }
+            }
+            return empreendimentos;
+        }
+
+        private void AtualizarEmpreendimentos(ICollection<Empreendimento> empreendimentos) {
+            ExecuteNonQuery("DELETE FROM EMPREENDIMENTO");
+            foreach (Empreendimento emp in empreendimentos) {
+                ExecuteNonQuery(
+                    "INSERT INTO EMPREENDIMENTO VALUES(@ORDEM, @NOME)",
+                    new SqlCeParameter("ORDEM", emp.Ordem),
+                    new SqlCeParameter("NOME", emp.Nome)
+                );
+            }
         }
 
         public ICollection<Lista> CarregarListas() {

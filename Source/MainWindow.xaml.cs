@@ -266,11 +266,23 @@ namespace Habitasorte {
         /* Etapa de Cadastro. */
 
         private void buttonAtualizarCadastro_Click(object sender, RoutedEventArgs e) {
+            if (Sorteio.ErroEmpreendimentos != null) {
+                ShowErrorMessage(Sorteio.ErroEmpreendimentos);
+            }
             if (Sorteio.IsValid) {
                 Service.AtualizarSorteio();
                 EtapaCadastro(true);
                 ShowMessage("Sorteio Alterado!");
             }
+        }
+
+        private void btnAdicionarEmpreendimento_Click(object sender, RoutedEventArgs e) {
+            Sorteio.AdicionarEmpreendimento("Novo Empreendimento");
+        }
+
+        private void btnRemoverEmpreendimento_Click(object sender, RoutedEventArgs e) {
+            Empreendimento empreendimento = ((sender as Button).Parent as Grid).DataContext as Empreendimento;
+            Sorteio.RemoverEmpreendimento(empreendimento);                        
         }
 
         /* Etapa de Importação. */

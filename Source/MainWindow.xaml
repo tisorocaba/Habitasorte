@@ -57,16 +57,51 @@
                 <Grid x:Name="grdCadastro">
                     <Grid x:Name="grdFormCadastro">
                         <Label Content="Nome do Sorteio" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
-                        <TextBox x:Name="txtNomeSorteio" Height="23" TextWrapping="Wrap" Text="{Binding Nome, ValidatesOnDataErrors=True}" Margin="10,36,10,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
-                        <Label Content="Empreendimento 1" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Padding="0,5,5,5"/>
-                        <TextBox x:Name="txtEmpreendimento1" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento1, ValidatesOnDataErrors=True}" Margin="10,90,10,0" VerticalAlignment="Top" MaxLength="26" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
-                        <CheckBox x:Name="chkBoxEmpreendimento2" Content="Empreendimento 2" IsChecked="{Binding Empreendimento2Ativo}" HorizontalAlignment="Left" Margin="10,124,0,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="txtEmpreendimento2" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento2, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento2Ativo}" Margin="10,144,10,0" VerticalAlignment="Top" MaxLength="26" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
-                        <CheckBox x:Name="chkBoxEmpreendimento3" Content="Empreendimento 3" IsEnabled="{Binding Empreendimento2Ativo}" IsChecked="{Binding Empreendimento3Ativo}" HorizontalAlignment="Left" Margin="10,178,0,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="txtEmpreendimento3" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento3, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento3Ativo}" Margin="10,198,10,0" VerticalAlignment="Top" MaxLength="26" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
-                        <CheckBox x:Name="chkBoxEmpreendimento4" Content="Empreendimento 4" IsEnabled="{Binding Empreendimento3Ativo}" IsChecked="{Binding Empreendimento4Ativo}" HorizontalAlignment="Left" Margin="10,232,0,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="txtEmpreendimento4" Height="23" TextWrapping="Wrap" Text="{Binding Empreendimento4, ValidatesOnDataErrors=True}" IsEnabled="{Binding Empreendimento4Ativo}" Margin="10,252,10,0" VerticalAlignment="Top" MaxLength="26" VerticalContentAlignment="Center" Grid.ColumnSpan="3"/>
-                        <Button x:Name="btnAtualizarCadastro" Content="Atualizar Dados" Height="24" Margin="10,290,10,0" VerticalAlignment="Top" Click="buttonAtualizarCadastro_Click"/>
+                        <TextBox x:Name="txtNomeSorteio" Height="23" TextWrapping="Wrap" Text="{Binding Nome, ValidatesOnDataErrors=True}" Margin="10,36,184,0" VerticalAlignment="Top" MaxLength="100" VerticalContentAlignment="Center"/>
+                        <Button x:Name="btnAdicionarEmpreendimento" Content="Adicionar Empreendimento" Margin="0,36,10,0" HorizontalAlignment="Right" Width="169" VerticalAlignment="Top" Height="23" Click="btnAdicionarEmpreendimento_Click" />
+                        <Grid VerticalAlignment="Top" Margin="10,65,29,0" Height="30">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" BorderThickness="1" BorderBrush="LightGray">
+                                <Label Content="Ordem" HorizontalContentAlignment="Center"/>
+                            </Border>
+                            <Border Grid.Column="1" BorderThickness="1" BorderBrush="LightGray">
+                                <Label Content="Nome do Empreedimento" HorizontalContentAlignment="Center"/>
+                            </Border>
+                            <Border Grid.Column="2" BorderThickness="1" BorderBrush="LightGray">
+                                <Label Content="-" HorizontalContentAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ListView x:Name="lstEmpreedimentos" Margin="10,100,10,63" ItemsSource="{Binding Empreendimentos}" ScrollViewer.VerticalScrollBarVisibility="Visible" KeyboardNavigation.TabNavigation="Continue" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="BorderBrush" Value="LightGray"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Padding" Value="2"/>
+                                    <Setter Property="Margin" Value="2"/>
+                                    <Setter Property="Focusable" Value="False"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="90"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="100"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Content="{Binding Ordem}" HorizontalContentAlignment="Center" Width="50" />
+                                        <TextBox Grid.Column="1" Text="{Binding Nome, ValidatesOnDataErrors=True}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"  Margin="10,0,0,0" GotFocus="TextBox_GotFocus" MaxLength="100" />
+                                        <Button Grid.Column="2" Content="Remover" Width="70" Click="btnRemoverEmpreendimento_Click" Focusable="False"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                        <Button x:Name="btnAtualizarCadastro" Content="Atualizar Dados" Height="24" VerticalAlignment="Bottom" Margin="10,0,10,34" Click="buttonAtualizarCadastro_Click"/>
                     </Grid>
                     <Grid Margin="10,0,10,5" VerticalAlignment="Bottom" Height="24" Grid.ColumnSpan="3">
                         <Button x:Name="btnRecuarCadastro" Content="&lt;&lt; Configuração" Margin="0,0,0,0" HorizontalAlignment="Left" Width="100" Click="btnRecuarCadastro_Click"/>
