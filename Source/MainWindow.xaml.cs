@@ -277,7 +277,7 @@ namespace Habitasorte {
         }
 
         private void btnAdicionarEmpreendimento_Click(object sender, RoutedEventArgs e) {
-            Sorteio.AdicionarEmpreendimento("Novo Empreendimento");
+            Sorteio.AdicionarEmpreendimento("NOVO EMPREENDIMENTO");
         }
 
         private void btnRemoverEmpreendimento_Click(object sender, RoutedEventArgs e) {
