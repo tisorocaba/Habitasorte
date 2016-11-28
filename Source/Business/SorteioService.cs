@@ -1,10 +1,12 @@
-﻿using Excel;
+﻿using CsvHelper;
+using Excel;
 using Habitasorte.Business.Model;
 using Habitasorte.Business.Model.Publicacao;
 using Habitasorte.Business.Pdf;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
@@ -109,26 +111,56 @@ namespace Habitasorte.Business {
         }
 
         public void CriarListasSorteio(string arquivoImportacao, Action<string> updateStatus, Action<int> updateProgress) {
-
             Execute(d => {
-                using (Stream stream = File.OpenRead(arquivoImportacao)) {
-                    using (IExcelDataReader excelReader = CreateExcelReader(arquivoImportacao, stream)) {
-
-                        List<string> empreendimentos = Model.Empreendimentos
-                            .OrderBy(e => e.Ordem)
-                            .Select(e => e.Nome)
-                            .ToList();
-
-                        d.CriarListasSorteio(empreendimentos, excelReader, updateStatus, updateProgress);
+                if (arquivoImportacao.ToLower().EndsWith(".csv")) {
+                    using (StreamReader streamReader = File.OpenText(arquivoImportacao)) {
+                        using (CsvDataReader csvReader = new CsvDataReader(streamReader)) {
+                            CriarListarSorteio(d, csvReader, updateStatus, updateProgress);
+                        }
+                    }
+                } else {
+                    using (FileStream fileStream = File.OpenRead(arquivoImportacao)) {
+                        using (IExcelDataReader excelReader = CreateExcelReader(fileStream)) {
+                            CriarListarSorteio(d, excelReader, updateStatus, updateProgress);
+                        }
                     }
                 }
                 AtualizarStatusSorteio(d, Status.QUANTIDADES);
             });
         }
 
-        private IExcelDataReader CreateExcelReader(string arquivoImportacao, Stream stream) {
-            return (arquivoImportacao.ToLower().EndsWith(".xlsx")) ?
-                ExcelReaderFactory.CreateOpenXmlReader(stream) : ExcelReaderFactory.CreateBinaryReader(stream);
+        private void CriarListarSorteio(Database database, IDataReader dataReader, Action<string> updateStatus, Action<int> updateProgress) {
+
+            List<string> empreendimentos = Model.Empreendimentos
+                .OrderBy(e => e.Ordem)
+                .Select(e => e.Nome)
+                .ToList();
+
+            try {
+                database.CriarListasSorteio(empreendimentos, dataReader, updateStatus, updateProgress);
+            } catch (Exception exception) {
+
+                string ultimoRegistro;
+                try {
+                    ultimoRegistro = string.Join("\n", new string[] {
+                        "CPF: " + dataReader.GetString(0),
+                        "NOME: " + dataReader.GetString(1),
+                        "QUANTIDADE_CRITERIOS: " + dataReader.GetString(2),
+                        "LISTA_DEFICIENTES: " + dataReader.GetString(3),
+                        "LISTA_IDOSOS: " + dataReader.GetString(4),
+                        "LISTA_INDICADOS: " + dataReader.GetString(5)
+                    });
+                } catch {
+                    ultimoRegistro = null;
+                }
+
+                throw new Exception($"{exception.Message}\n\n- ÚLTIMO REGISTRO LIDO -\n\n{ultimoRegistro}");
+            }
+        }
+
+        private IExcelDataReader CreateExcelReader(FileStream FileStream) {
+            return (FileStream.Name.ToLower().EndsWith(".xlsx")) ?
+                ExcelReaderFactory.CreateOpenXmlReader(FileStream) : ExcelReaderFactory.CreateBinaryReader(FileStream);
         }
 
         public void SortearProximaLista(Action<string> updateStatus, Action<int> updateProgress, Action<string> logText, int? sementePersonalizada = null) {

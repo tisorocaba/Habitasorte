@@ -293,7 +293,11 @@ namespace Habitasorte {
 
             bool validFile = files != null
                 && files.Count() == 1
-                && (files.First().ToLower().EndsWith(".xls") || files.First().ToLower().EndsWith(".xlsx"));
+                && (
+                    files.First().ToLower().EndsWith(".xls")
+                    || files.First().ToLower().EndsWith(".xlsx")
+                    || files.First().ToLower().EndsWith(".csv")
+                );
 
             return (validFile) ? files.First() : null;
         }
